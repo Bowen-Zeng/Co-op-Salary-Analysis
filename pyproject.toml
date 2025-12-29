@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coop-salary-analysis"
+version = "0.1.0"
+description = "End-to-end analysis and interactive dashboard of self-reported co-op salary data"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "Bowen Zeng", email = "228807252+Bowen-Zeng@users.noreply.github.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.3.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.3.0",
+    "flake8>=6.0.0",
+    "mypy>=1.3.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "dashboard*"]

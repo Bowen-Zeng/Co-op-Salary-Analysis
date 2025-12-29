@@ -138,7 +138,7 @@ def sanitize_filename(filename: str) -> str:
     return filename
 
 
-def calculate_percentage_change(old_value: float, new_value: float) -> float:
+def calculate_percentage_change(old_value: float, new_value: float) -> Optional[float]:
     """
     Calculate percentage change between two values.
     
@@ -152,9 +152,10 @@ def calculate_percentage_change(old_value: float, new_value: float) -> float:
         new_value: New value
     
     Returns:
-        Percentage change (placeholder returns 0.0)
+        Percentage change, or None if old_value is 0 (undefined)
     """
     # Placeholder - actual implementation would calculate percentage
     if old_value == 0:
-        return 0.0
+        # Cannot calculate percentage change from zero (infinite growth)
+        return None
     return ((new_value - old_value) / old_value) * 100

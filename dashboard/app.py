@@ -5,12 +5,6 @@ This module serves as the main entry point for the dashboard/API service.
 Placeholder for dashboard functionality - framework agnostic.
 """
 
-import sys
-from pathlib import Path
-
-# Add parent directory to path to import src modules
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from src.data_loader import load_csv_data, get_data_path
 from src.analysis import calculate_summary_statistics, analyze_by_category
 from src.utils import setup_logging, get_project_root

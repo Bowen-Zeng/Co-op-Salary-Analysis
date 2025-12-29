@@ -60,9 +60,15 @@ Co-op-Salary-Analysis/
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies:
+3. Install the package in development mode:
    ```bash
+   pip install -e .
    pip install -r requirements.txt
+   ```
+
+   Or install with development dependencies:
+   ```bash
+   pip install -e ".[dev]"
    ```
 
 ## Usage

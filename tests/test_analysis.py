@@ -5,11 +5,7 @@ This module contains basic test placeholders for the analysis module.
 """
 
 import unittest
-import sys
 from pathlib import Path
-
-# Add parent directory to path to import src modules
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.analysis import (
     calculate_summary_statistics,

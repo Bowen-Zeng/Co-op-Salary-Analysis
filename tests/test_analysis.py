@@ -5,7 +5,6 @@ This module contains basic test placeholders for the analysis module.
 """
 
 import unittest
-from pathlib import Path
 
 from src.analysis import (
     calculate_summary_statistics,

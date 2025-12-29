@@ -76,9 +76,13 @@ def format_currency(amount: float, currency: str = "USD") -> str:
         currency: Currency code (USD, CAD, EUR, etc.)
     
     Returns:
-        Formatted currency string (placeholder)
+        Formatted currency string (placeholder always uses $ symbol)
+    
+    Note:
+        This placeholder implementation always uses $ regardless of currency parameter.
+        A full implementation would map currency codes to symbols (e.g., EUR -> €, GBP -> £).
     """
-    # Placeholder - actual implementation would format currency
+    # Placeholder - actual implementation would use proper currency symbols based on currency parameter
     return f"${amount:,.2f}"
 
 

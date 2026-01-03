@@ -2,7 +2,8 @@
 Data Loader Module
 
 This module handles loading data from various sources into the application.
-Placeholder for data loading functionality - does not implement data cleaning or transformations.
+They don't actually do any computation, I just use them when needed.
+
 """
 
 import os

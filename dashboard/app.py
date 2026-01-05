@@ -17,7 +17,10 @@ st.set_page_config(
 # ---------- Load data ----------
 @st.cache_data
 def load_data():
-    return pd.read_csv("../Processed/cleaned_salaries.csv")
+    # Use Path to construct platform-independent path
+    from pathlib import Path
+    csv_path = Path(__file__).parent.parent / "Processed" / "cleaned_salaries.csv"
+    return pd.read_csv(csv_path)
 
 df = load_data()
 

@@ -1,125 +1,132 @@
 """
-Dashboard Application Entry Point
-
-This module serves as the main entry point for the dashboard/API service.
+Dashboard Application in StreamLit
 Placeholder for dashboard functionality - framework agnostic.
 """
 
-from src.data_loader import load_csv_data, get_data_path
-from src.analysis import calculate_summary_statistics, analyze_by_category
-from src.utils import setup_logging, get_project_root
+import pandas as pd
+import streamlit as st
+import plotly.express as px
 
+# ---------- Page config ----------
+st.set_page_config(
+    page_title="Co-op Salary Insights",
+    page_icon="📊",
+    layout="wide"
+)
 
-def initialize_app():
+# ---------- Load data ----------
+@st.cache_data
+def load_data():
+    return pd.read_csv("Processed/cleaned_salaries.csv")
+
+df = load_data()
+
+# ---------- Header ----------
+st.markdown(
     """
-    Initialize the dashboard application.
-    
-    This is a placeholder function. Implementation should:
-    - Set up the web framework (Flask, FastAPI, Streamlit, etc.)
-    - Configure routes/endpoints
-    - Initialize database connections if needed
-    - Set up middleware
-    
-    Returns:
-        Application instance (placeholder returns None)
-    """
-    print("Initializing dashboard application...")
-    setup_logging(log_level="INFO")
-    print(f"Project root: {get_project_root()}")
-    return None
+    <h1 style='margin-bottom:0'>Co-op Salary Insights</h1>
+    <p style='color:gray; margin-top:0'>
+    An analysis of co-op compensation across companies and roles
+    </p>
+    """,
+    unsafe_allow_html=True
+)
 
+st.markdown("---")
 
-def create_api_routes():
-    """
-    Define API routes/endpoints.
-    
-    This is a placeholder function. Implementation should define routes like:
-    - GET /api/summary - Get summary statistics
-    - GET /api/data - Get filtered salary data
-    - GET /api/trends - Get trend analysis
-    - GET /api/categories - Get available categories
-    
-    Returns:
-        None (placeholder)
-    """
-    print("Creating API routes...")
-    # Placeholder for API routes
-    pass
+# ---------- Sidebar ----------
+st.sidebar.header("Filters")
 
+company = st.sidebar.selectbox(
+    "Company",
+    ["All"] + sorted(df["company"].unique())
+)
 
-def render_dashboard():
-    """
-    Render the interactive dashboard UI.
-    
-    This is a placeholder function. Implementation should:
-    - Create dashboard layout
-    - Add interactive charts and visualizations
-    - Add filters and controls
-    - Display key metrics and insights
-    
-    Returns:
-        None (placeholder)
-    """
-    print("Rendering dashboard UI...")
-    # Placeholder for dashboard rendering
-    pass
+if company != "All":
+    df = df[df["company"] == company]
 
+# ---------- KPI Section ----------
+col1, col2, col3, col4 = st.columns(4)
 
-def start_server(host: str = "0.0.0.0", port: int = 8000, debug: bool = False):
-    """
-    Start the dashboard/API server.
-    
-    This is a placeholder function. Implementation should:
-    - Start the web server
-    - Handle configuration (host, port, debug mode)
-    - Set up hot reloading if in debug mode
-    
-    Args:
-        host: Host address to bind to
-        port: Port number to listen on
-        debug: Whether to run in debug mode
-    
-    Returns:
-        None (placeholder)
-    """
-    print(f"Starting server on {host}:{port} (debug={debug})...")
-    # Placeholder - actual implementation would start server
-    # Example for Flask:
-    # app.run(host=host, port=port, debug=debug)
-    # Example for FastAPI:
-    # uvicorn.run(app, host=host, port=port)
-    # Example for Streamlit:
-    # streamlit.run() would be used via CLI
-    pass
+col1.metric(
+    "Average Salary (USD)",
+    f"${df['salary_annual_usd'].mean():,.0f}"
+)
 
+col2.metric(
+    "Median Salary (USD)",
+    f"${df['salary_annual_usd'].median():,.0f}"
+)
 
-def main():
-    """
-    Main entry point for the dashboard application.
-    
-    This function orchestrates the initialization and startup of the dashboard.
-    """
-    print("=" * 60)
-    print("Co-op Salary Analysis Dashboard")
-    print("=" * 60)
-    
-    # Initialize application
-    app = initialize_app()
-    
-    # Create routes/endpoints
-    create_api_routes()
-    
-    # Render dashboard (if using a framework like Streamlit)
-    # render_dashboard()
-    
-    # Start server
-    print("\nStarting dashboard server...")
-    print("Note: This is a placeholder. Actual implementation would start a web server.")
-    print("Example frameworks: Flask, FastAPI, Streamlit, Dash, etc.")
-    
-    # Uncomment and configure based on chosen framework:
-    # start_server(host="0.0.0.0", port=8000, debug=True)
+col3.metric(
+    "Max Salary",
+    f"${df['salary_annual_usd'].max():,.0f}"
+)
 
+col4.metric(
+    "Observations",
+    f"{len(df):,}"
+)
 
-if __name__ == "__main__":
-    main()
+st.markdown("## Salary Distribution")
+
+# ---------- Main Chart ----------
+fig = px.histogram(
+    df,
+    x="salary_annual_usd",
+    nbins=40,
+    title="Distribution of Annualized Salaries",
+    labels={"salary_annual_usd": "Annual Salary (USD)"},
+    template="simple_white"
+)
+
+fig.update_layout(
+    title_x=0.5,
+    height=450
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+# ---------- Secondary Section ----------
+left, right = st.columns([2, 1])
+
+with left:
+    st.markdown("### Top Paying Companies")
+    top_companies = (
+        df.groupby("company")["salary_annual_usd"]
+        .mean()
+        .sort_values(ascending=False)
+        .head(10)
+        .reset_index()
+    )
+
+    bar = px.bar(
+        top_companies,
+        x="salary_annual_usd",
+        y="company",
+        orientation="h",
+        template="simple_white",
+        labels={
+            "salary_annual_usd": "Avg Salary (USD)",
+            "company": ""
+        }
+    )
+
+    bar.update_layout(height=400)
+    st.plotly_chart(bar, use_container_width=True)
+
+with right:
+    st.markdown("### Sample Data")
+    st.dataframe(
+        df[["company", "salary_annual_usd"]]
+        .sort_values("salary_annual_usd", ascending=False)
+        .head(10),
+        height=400
+    )
+
+# ---------- Footer ----------
+st.markdown("---")
+st.caption(
+    "Salaries normalized to annual USD values. "
+    "Data cleaned and processed in Python."
+)

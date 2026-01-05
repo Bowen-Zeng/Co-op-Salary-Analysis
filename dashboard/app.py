@@ -129,4 +129,8 @@ st.markdown("---")
 st.caption(
     "Salaries normalized to annual USD values. "
     "Data cleaned and processed in Python."
+<<<<<<< HEAD
 )
+=======
+)
+>>>>>>> 961ed839e56b15cc98143633b018bd9d3594b194

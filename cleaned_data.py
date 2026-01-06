@@ -10,7 +10,7 @@ WEEKS_PER_MONTH = 4
 WEEKS_PER_TERM = 16
 
 RAW_DATA_PATH = Path("data/raw/Waterloo_Co-op_Salaries_List_for_Analysis.csv")
-CLEAN_DATA_PATH = Path("data/processed/Waterloo_Co-op_Salaries_List_for_Analysis.csv")
+CLEAN_DATA_PATH = Path("Processed/cleaned_salaries.csv")
 
 def load_raw_data():
     # Skip the introductory note row and align columns with parser expectations
@@ -102,6 +102,15 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # Sanity filter
     df = df[(df["salary_cad_hourly"] > 5) & (df["salary_cad_hourly"] < 200)]
+
+    # Split company_role into company and role
+    df["company"] = df["company_role"]
+    df["role"] = ""  # Role is not separated in the original data
+
+    # Calculate annual salary in USD
+    # Annual = hourly * 40 hrs/week * 52 weeks/year
+    # Convert CAD to USD by dividing by USD_TO_CAD
+    df["salary_annual_usd"] = (df["salary_cad_hourly"] * 40 * 52) / USD_TO_CAD
 
     return df
 

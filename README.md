@@ -2,6 +2,8 @@
 
 End-to-end analysis and interactive dashboard of self-reported co-op salary data using Python and modern data tools.
 
+Check it out here! 👉 https://co-op-salary-analysis-yumvcc5d3fhlmx9lw9lggt.streamlit.app/ 
+
 ## Overview
 
 This project provides a production-ready data application for analyzing co-op salary data. It includes modular code for data loading, analysis, and an interactive dashboard service to visualize insights.
